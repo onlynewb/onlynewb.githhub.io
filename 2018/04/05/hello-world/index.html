@@ -6,19 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://www.thinkinio.cn">
-  <title>onlyNewb的博客</title>
+  <title>linux ssh 免密登录 | onlyNewb的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="程序员">
-<meta name="keywords" content="开发者,程序猿,程序媛,极客,编程,代码,开源,IT网站,Developer,Programmer,Coder">
-<meta property="og:type" content="website">
-<meta property="og:title" content="onlyNewb的博客">
-<meta property="og:url" content="http://www.thinkinio.cn/index.html">
+  <meta name="description" content="以下用三台centos为例，ip分别为192.168.44.138、192.168.44.139、192.168.44.140，分别对应别名master、slave1、slave2 1、首先在每个机器上执行1ssh-keygen -t rsa 一直按回车默认就好">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux ssh 免密登录">
+<meta property="og:url" content="http://www.thinkinio.cn/2018/04/05/hello-world/index.html">
 <meta property="og:site_name" content="onlyNewb的博客">
-<meta property="og:description" content="程序员">
+<meta property="og:description" content="以下用三台centos为例，ip分别为192.168.44.138、192.168.44.139、192.168.44.140，分别对应别名master、slave1、slave2 1、首先在每个机器上执行1ssh-keygen -t rsa 一直按回车默认就好">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://wx3.sinaimg.cn/large/e44344dcly1fq23r2lbinj20ek0973yr.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/large/e44344dcly1fq23r3v47dj21h7035mxd.jpg">
+<meta property="og:image" content="http://wx1.sinaimg.cn/large/e44344dcly1fq23r25etxj21g303iglw.jpg">
+<meta property="og:updated_time" content="2018-12-07T10:27:29.694Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="onlyNewb的博客">
-<meta name="twitter:description" content="程序员">
+<meta name="twitter:title" content="linux ssh 免密登录">
+<meta name="twitter:description" content="以下用三台centos为例，ip分别为192.168.44.138、192.168.44.139、192.168.44.140，分别对应别名master、slave1、slave2 1、首先在每个机器上执行1ssh-keygen -t rsa 一直按回车默认就好">
+<meta name="twitter:image" content="http://wx3.sinaimg.cn/large/e44344dcly1fq23r2lbinj20ek0973yr.jpg">
   
     <link rel="alternative" href="/atom.xml" title="onlyNewb的博客" type="application/atom+xml">
   
@@ -146,16 +151,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+            <article id="post-hello-world" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/05/hello-world/">linux ssh 免密登录</a>
+    <h1 class="article-title" itemprop="name">
+      linux ssh 免密登录
     </h1>
   
 
@@ -170,14 +173,44 @@
       
         <p>以下用三台centos为例，ip分别为192.168.44.138、192.168.44.139、192.168.44.140，分别对应别名master、slave1、slave2</p>
 <h2 id="1、首先在每个机器上执行"><a href="#1、首先在每个机器上执行" class="headerlink" title="1、首先在每个机器上执行"></a>1、首先在每个机器上执行</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
-<p>一直按回车默认就好<br><img src="http://wx3.sinaimg.cn/large/e44344dcly1fq23r2lbinj20ek0973yr.jpg" alt=""><br>
-        
-          <a class="article-more-a" href="/2018/04/05/hello-world/#more">more >></a>
-        
+<p>一直按回车默认就好<br><img src="http://wx3.sinaimg.cn/large/e44344dcly1fq23r2lbinj20ek0973yr.jpg" alt=""><br><a id="more"></a></p>
+<h2 id="2、将公钥导入到认证文件中"><a href="#2、将公钥导入到认证文件中" class="headerlink" title="2、将公钥导入到认证文件中"></a>2、将公钥导入到认证文件中</h2><p>将三个机器上id_rsa.pub的内容合并起来放在authorized_keys，可以用命令按下面的步骤来，也可以分别将三个机器的公钥拷贝出来放在一个文件里，之后分别复制到各自机器的authorized_keys，我用的是下面的命令</p>
+<h3 id="2-1-在master上执行"><a href="#2-1-在master上执行" class="headerlink" title="2.1 在master上执行"></a>2.1 在master上执行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">cat id_rsa.pub&gt;&gt;authorized_keys</span><br></pre></td></tr></table></figure>
+<p>（这时如果配单机的话，就可以免密登录本机了，可以执行ssh localhost 或ssh master验证一下，如下图）<br><img src="http://wx3.sinaimg.cn/large/e44344dcly1fq23r3v47dj21h7035mxd.jpg" alt=""></p>
+<p>如果不能免密登录，可能是文件权限不对，执行下面的命令，再验证一下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 710 authorized_keys</span><br></pre></td></tr></table></figure></p>
+<p>然后将master的authorized_keys传到slave1上的.ssh目录下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r authorized_keys root@slave1:~/.ssh</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://wx1.sinaimg.cn/large/e44344dcly1fq23r25etxj21g303iglw.jpg" alt=""></p>
+<h3 id="2-2-在slave1上执行"><a href="#2-2-在slave1上执行" class="headerlink" title="2.2 在slave1上执行"></a>2.2 在slave1上执行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">cat id_rsa.pub&gt;&gt;authorized_keys</span><br><span class="line">scp -r authorized_keys root@slave2:~/.ssh</span><br></pre></td></tr></table></figure>
+<p>这一步实际是将salve1的id_rsa.pub和master传过来的authorized_keys里的内容合并起来存到authorized_keys，然后将authorized_keys传到slave2机器上</p>
+<h3 id="2-3-在slave2上执行"><a href="#2-3-在slave2上执行" class="headerlink" title="2.3 在slave2上执行"></a>2.3 在slave2上执行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">cat id_rsa.pub&gt;&gt;authorized_keys</span><br><span class="line">scp -r authorized_keys root@master:~/.ssh</span><br><span class="line">scp -r authorized_keys root@slave1:~/.ssh</span><br></pre></td></tr></table></figure>
+<p>这一步实际是将salve2的id_rsa.pub和slave1传过来的authorized_keys里的内容合并起来存到authorized_keys，然后将authorized_keys传到master、slave1机器上。<br>到这里，每台机器上的authorized_keys都含有三台机器的公钥，在每台机器上验证一下是否可以免密ssh登录到三台机器上了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh master</span><br><span class="line">ssh slave1</span><br><span class="line">ssh slave2</span><br></pre></td></tr></table></figure></p>
+<p>如果都不需要输入密码,就代表配置成功！</p>
+
       
 
       
-    </p></div>
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
     <div class="article-info article-info-index">
       
       
@@ -195,16 +228,65 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/05/hello-world/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://www.thinkinio.cn/2018/04/05/hello-world/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -224,8 +306,14 @@
 
 
 
+  
+  
+  
 
   
+
+  
+
   
 
 
@@ -248,8 +336,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
